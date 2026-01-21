@@ -66,36 +66,13 @@ st.markdown("""
         color: #333333;
     }
 
-    /* Fixed Header Styles */
-    .sticky-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        background-color: #FFFFFF;
-        z-index: 999999; /* Maintain on top */
-        padding: 10px 0; /* Reduced padding */
-        text-align: center;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        border-bottom: 4px solid #C8102E;
-    }
-    
-    .sticky-title {
-        font-size: 1.2rem; /* Reduced to 60% of 2rem */
-        font-weight: 800;
-        color: #1a1a1a;
-        margin: 0;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
     /* Streamlit overrides */
     [data-testid="stHeader"] {
         display: none;
     }
     
     .block-container {
-        padding-top: 7rem !important; /* Push content down */
+        padding-top: 2rem !important;
         padding-bottom: 2rem;
         max-width: 95%;
     }
@@ -104,12 +81,12 @@ st.markdown("""
     .news-card {
         background-color: #FFFFFF;
         border-radius: 8px;
-        padding: 12px;
-        margin-bottom: 12px;
+        padding: 8px; /* Reduced from 12px */
+        margin-bottom: 8px; /* Reduced from 12px */
         box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         border-left: 5px solid #C8102E; 
         transition: transform 0.2s, box-shadow 0.2s;
-        height: 380px; 
+        height: 200px; /* Reduced by ~40% (was 330px) */
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -119,42 +96,42 @@ st.markdown("""
         display: flex;
         flex-direction: row;
         align-items: flex-start;
-        gap: 10px;
-        margin-bottom: 8px;
+        gap: 8px; /* Reduced gap */
+        margin-bottom: 2px; /* Minimal margin */
     }
     
     .card-title {
-        font-size: 0.95rem;
+        font-size: 0.9rem; /* Slightly smaller for compact view */
         font-weight: 700;
         color: #C8102E; 
-        line-height: 1.25;
+        line-height: 1.2; 
         margin: 0;
         display: -webkit-box;
-        -webkit-line-clamp: 3;
+        -webkit-line-clamp: 2; /* Limit to 2 lines */
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-height: 3.8em; 
+        max-height: 2.5em; 
     }
     
     .card-summary {
-        font-size: 0.9rem;
+        font-size: 0.85rem; 
         color: #333;
-        margin-bottom: 8px;
-        margin-top: 8px;
+        margin-bottom: 4px; 
+        margin-top: 2px; 
         display: -webkit-box;
-        -webkit-line-clamp: 9;
+        -webkit-line-clamp: 4; /* Reduced to ~4 lines to fit new height */
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
         flex-grow: 1;
-        line-height: 1.4;
+        line-height: 1.35;
     }
     
     .card-footer {
         margin-top: auto;
         border-top: 1px solid #EEEEEE;
-        padding-top: 8px;
+        padding-top: 4px; 
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -205,9 +182,6 @@ st.markdown("""
     }
 
 </style>
-<div class="sticky-header">
-    <div class="sticky-title">Resumen de noticias con IA</div>
-</div>
 """, unsafe_allow_html=True)
 
 # --- Logic ---
@@ -223,21 +197,15 @@ def refresh_data(api_key=None):
     st.rerun() 
 
 # --- Layout ---
-# Sidebar for API Key
-with st.sidebar:
-    st.header("Configuración")
-    
-    if SECRET_API_KEY and "sk-" in SECRET_API_KEY:
-        api_key = SECRET_API_KEY
-        st.success("API Key cargada desde secretos 🔒")
-    else:
+
+# API Key Logic (Hidden/Simplified)
+if SECRET_API_KEY and "sk-" in SECRET_API_KEY:
+    api_key = SECRET_API_KEY
+else:
+    # Minimal config if key is missing, avoiding sidebar
+    with st.expander("⚙️ Configuración"):
         api_key = st.text_input("OpenAI API Key", type="password", help="Introduce tu clave para habilitar IA")
-    
-    if not api_key:
-        st.warning("⚠️ MODO SIN IA: Mostrando títulos originales.")
-        st.info("Ingresa tu API Key para generar resúmenes neutrales.")
-    else:
-        st.success("✅ MODO IA ACTIVO")
+
 
 # Header Area with Actions
 col_actions, col_filters = st.columns([1, 3], vertical_alignment="bottom")
