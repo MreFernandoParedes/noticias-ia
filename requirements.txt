@@ -1,0 +1,10 @@
+streamlit>=1.40.0
+feedparser
+beautifulsoup4
+textblob
+pandas
+regex
+requests
+openai
+python-dotenv
+python-dateutil
